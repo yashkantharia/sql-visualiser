@@ -1,5 +1,3 @@
----
-
 # ⚡ SQL.js Studio - Live Execution Visualizer
 
 A powerful, fully client-side SQL workbench designed to visualize the internal execution flow of SQL queries. Powered by **SQL.js** (SQLite compiled to WebAssembly), this tool breaks down queries into logical steps and animates the data retrieval process row-by-row in real-time.
