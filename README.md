@@ -1,32 +1,46 @@
+---
+
 # ⚡ SQL.js Studio - Live Execution Visualizer
 
-A lightweight, fully client-side SQL workbench designed to visualize the logical execution flow of SQL queries in real-time. Powered by **SQL.js** (SQLite compiled to WebAssembly), this tool breaks down queries into granular steps and animates the data retrieval process row-by-row.
+A powerful, fully client-side SQL workbench designed to visualize the internal execution flow of SQL queries. Powered by **SQL.js** (SQLite compiled to WebAssembly), this tool breaks down queries into logical steps and animates the data retrieval process row-by-row in real-time.
 
 *(Replace this link with an actual screenshot of your application)*
 
-## 🚀 Features
+## 🚀 Key Features
 
-* **Granular Execution Pipeline:** Visualizes the logical order of operations (`FROM` → `JOIN` → `WHERE` → `SELECT`) in a dedicated sidebar.
-* **Row-by-Row Join Animation:** Simulates the "Nested Loop Join" process, highlighting rows as they are Scanned (Yellow), Read (Pink), and Matched (Green).
-* **Real-Time Output:** Results are streamed to the "Final Output" table instantly as matches are found, rather than waiting for the entire query to finish.
-* **Fully In-Browser Engine:** Uses [SQL.js](https://sql.js.org/) to run a full SQLite database inside your browser. No server setup required.
-* **Interactive Schema Editor:**
-* Add/Remove tables.
-* Add/Remove columns and rows.
-* Directly edit cell values.
+### 1. 🧠 Granular Execution Pipeline
 
+* **Logical Breakdown:** Visualizes the query lifecycle in specific stages: `FROM`  `JOIN`  `WHERE`  `SELECT`.
+* **Live Tracking:** A dedicated sidebar tracks which part of the query is currently being executed (`Pending`, `Active`, `Done`).
 
-* **Smart Aliasing:** Automatically handles column name collisions (e.g., `o.id` vs `c.id`) during intermediate join steps.
-* **Execution Controls:**
-* Adjust animation speed (Slow motion to Fast forward).
-* Dark/Light Mode toggle.
-* Reset Data button.
+### 2. 👁️ Real-Time Row-by-Row Animation
+
+* **Nested Loop Simulation:** Visually simulates how a database engine scans tables.
+* <span style="background:#fef08a; padding:2px 5px; border-radius:3px; color:#000">**Yellow**</span>: **Scanning** rows in the source table.
+* <span style="background:#f9a8d4; padding:2px 5px; border-radius:3px; color:#000">**Pink**</span>: **Reading** specific cells for comparison.
+* <span style="background:#86efac; padding:2px 5px; border-radius:3px; color:#000">**Green**</span>: **Match Found!** The row is merged and sent to the result set.
 
 
+* **Intermediate Results:** Watch as temporary tables are built dynamically during `JOIN` operations.
+
+### 3. 🛠️ Full Interactive Schema Editor
+
+* **Manage Structure:** Add or remove Tables, Columns, and Rows with a single click.
+* **Inline Editing:** Click on **any cell** (header or data) to edit values directly.
+* **Smart Tooltips:** Hover over truncated cells to view their full content.
+
+### 4. ⚡ Live Output Streaming
+
+* **Zero Latency:** Results are pushed to the "Final Output" table the instant a match is found, rather than waiting for the entire query to finish.
+* **Smart Aliasing:** Automatically handles column name collisions (e.g., `Orders.id` vs `Customers.id`) by prefixing them in intermediate views.
+
+### 5. 🛡️ Robust Error Handling
+
+* **Console Tab:** Automatically switches to a "Messages" tab to display detailed SQL syntax errors if a query fails.
 
 ## 🛠️ Installation & Usage
 
-This project is a **single-file application**. There are no build steps, NPM installs, or backend servers required.
+This project is a **single-file application**. No Node.js, Python, or backend server is required.
 
 1. **Clone the repository:**
 ```bash
@@ -35,64 +49,41 @@ git clone https://github.com/yourusername/sql-js-studio.git
 ```
 
 
-2. **Open the file:**
-Simply double-click `index.html` to open it in any modern web browser (Chrome, Firefox, Edge, Safari).
-*Note: The application requires an internet connection initially to load the SQL.js library via CDN.*
+2. **Run the App:**
+Simply double-click `index.html` to open it in your browser.
+* *Requirement:* An active internet connection is needed on the first load to fetch the SQL.js WASM library from the CDN.
+
+
 
 ## 📖 How to Use
 
-### 1. Define Your Data
+1. **Setup Data (Left Panel):**
+* Use the **+ Add** button to create tables.
+* Use the **+ Row** / **+ Col** buttons to populate them.
+* *Tip:* Click `Reset` in the header to load the default E-Commerce dataset.
 
-Use the **Left Panel** to manage your database schema.
 
-* Click **+ Add** to create a new table.
-* Use the **+ Row** / **+ Col** buttons on specific tables to expand them.
-* Click on any cell to edit the data directly.
+2. **Write Query (Right Panel):**
+* Enter standard SQLite syntax in the editor.
+* Supports `CTEs`, `Window Functions`, `Aggregations`, and `Subqueries`.
 
-### 2. Write a Query
 
-Use the **Query Editor** on the right. Standard SQLite syntax is supported.
-
-* **Example Query:**
-```sql
-SELECT
-    o.id, c.name, p.name as Product
-FROM Orders o
-JOIN Customers c ON o.customer_id = c.id
-JOIN Products p ON o.product_id = p.id
-WHERE o.quantity > 0
-
-```
+3. **Visualize:**
+* Adjust the **Speed Slider** (Top Right) to control the animation pace.
+* Click **▶ Run & Visualize**.
+* Watch the **"Process Visualization"** stage to see the engine traverse your data.
 
 
 
-### 3. Run & Visualize
+## ⚙️ Technical Stack
 
-Click the **▶ Run & Visualize** button.
+* **Engine:** [SQL.js](https://sql.js.org/) (SQLite via WebAssembly).
+* **Frontend:** Pure HTML5, CSS3 (Grid/Flexbox), and Vanilla JavaScript.
+* **Visualization Logic:** Custom asynchronous event loop that parses SQL strings to reconstruct the logical "Physical Plan" of execution for educational visualization.
 
-* **Animation:** Watch the "Process Visualization" stage to see tables being scanned and joined.
-* **Pipeline:** Track the current stage of the query in the "Execution Pipeline" sidebar.
-* **Results:** Watch the "Final Output" table populate in real-time.
+---
 
-## ⚙️ Technical Details
-
-* **Core Engine:** [SQL.js](https://www.google.com/search?q=https://github.com/sql-js/sql.js) (WASM).
-* **Visualization Logic:** The application uses a custom JavaScript parser to identify query clauses (`FROM`, `JOIN`, `WHERE`) and constructs a visual simulation of the execution plan. It highlights DOM elements corresponding to data rows to visualize scan operations.
-* **Layout:** Built with CSS Grid and Flexbox for a responsive, dashboard-style layout.
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to improve the visualization logic or add support for more complex SQL clauses:
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+**Built for educational purposes to demystify SQL execution.**
 
 ---
 
