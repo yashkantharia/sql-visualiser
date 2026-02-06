@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL.js Studio - Final Integrated</title>
+    <title>SQL.js Studio - Mobile Fixed</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 
@@ -50,7 +50,18 @@
         }
 
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Desktop Default: Fixed App Layout */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; /* Desktop: Prevent outer scroll */
+        }
 
         /* HEADER */
         header { background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 0 20px; height: 50px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -130,7 +141,7 @@
             flex: 1; padding: 20px; overflow: auto; display: flex; flex-direction: column; gap: 30px;
         }
 
-        /* VIZ TABLES - HORIZONTAL LAYOUT */
+        /* VIZ TABLES */
         .viz-row-container {
             display: flex; gap: 20px; align-items: flex-start; width: 100%; flex-wrap: wrap;
         }
@@ -161,6 +172,70 @@
         .res-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
         .new-res-row { animation: flashGreen 1s; }
         @keyframes flashGreen { 0% { background: var(--anim-match); } 100% { background: transparent; } }
+
+        /* --- RESPONSIVE MOBILE CSS --- */
+        @media (max-width: 900px) {
+            /* Enable full page scroll */
+            body { 
+                height: auto; 
+                overflow-y: auto; 
+            }
+            
+            /* Header Wrap */
+            header { height: auto; flex-wrap: wrap; padding: 10px 15px; gap: 10px; }
+            .controls { width: 100%; justify-content: space-between; }
+
+            /* Main Layout Stack */
+            main { 
+                flex-direction: column; 
+                overflow: visible; 
+                height: auto; 
+            }
+
+            /* Schema Panel */
+            #schema-panel { 
+                width: 100%; 
+                height: auto; 
+                max-height: 400px; /* Internal scroll if too long */
+                border-right: none; 
+                border-bottom: 1px solid var(--border); 
+            }
+
+            /* Workbench Container */
+            #workbench { 
+                padding: 10px; 
+                gap: 20px; 
+                overflow: visible; 
+                height: auto;
+            }
+
+            /* Editor & Pipeline Stack */
+            #top-pane { 
+                flex-direction: column; 
+                height: auto; 
+            }
+            #pipeline-col { 
+                width: 100%; 
+                flex-direction: row; 
+                flex-wrap: wrap; 
+                height: auto;
+                max-height: 120px;
+            }
+            .pipe-step { flex: 1 1 40%; } /* 2 per row */
+            #editor-col { height: 300px; }
+
+            /* Viz Stage Fix Height for scrolling */
+            #viz-stage { 
+                height: 400px; 
+                flex: none; 
+            }
+
+            /* Result Pane */
+            #result-pane { 
+                height: 300px; 
+                flex: none; 
+            }
+        }
 
     </style>
 </head>
