@@ -22,9 +22,11 @@
             --success: #10b981;
             --danger: #ef4444;
             
-            --anim-scan: #fef08a; /* Yellow Row Scan */
-            --anim-cell: #f472b6; /* Pink Cell Compare */
-            --anim-match: #86efac; /* Green Match */
+            /* Viz Colors */
+            --anim-scan: #fef08a; /* Yellow: Active Scan */
+            --anim-cell: #f472b6; /* Pink: Active Cell Read */
+            --anim-match: #86efac; /* Green: Match Found */
+            --anim-visited: #f1f5f9; /* Gray: Previously Read */
             
             /* Pipeline Colors */
             --step-pending: #e2e8f0;
@@ -40,9 +42,12 @@
             --text-muted: #94a3b8;
             --border: #334155;
             --primary-bg: #1e3a8a;
+            
+            /* Viz Colors Dark */
             --anim-scan: #422006;
             --anim-cell: #831843;
             --anim-match: #064e3b;
+            --anim-visited: #334155; /* Slightly lighter than panel */
             
             --step-pending: #334155;
             --step-active: #b45309;
@@ -51,7 +56,7 @@
 
         * { box-sizing: border-box; }
         
-        /* Desktop Default: Fixed App Layout */
+        /* Fixed App Layout on Desktop */
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
@@ -60,7 +65,7 @@
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            overflow: hidden; /* Desktop: Prevent outer scroll */
+            overflow: hidden; 
         }
 
         /* HEADER */
@@ -141,7 +146,7 @@
             flex: 1; padding: 20px; overflow: auto; display: flex; flex-direction: column; gap: 30px;
         }
 
-        /* VIZ TABLES */
+        /* VIZ TABLES - HORIZONTAL LAYOUT */
         .viz-row-container {
             display: flex; gap: 20px; align-items: flex-start; width: 100%; flex-wrap: wrap;
         }
@@ -160,10 +165,37 @@
 
         .arrow-icon { align-self: center; font-size: 1.5rem; color: var(--text-muted); padding-top: 20px; }
 
-        /* Animation States */
-        .row-scanning .v-cell { background-color: var(--anim-scan) !important; }
-        .cell-reading { background-color: var(--anim-cell) !important; color: white; font-weight: bold; transform: scale(1.1); box-shadow: 0 0 5px rgba(0,0,0,0.2); z-index:10; }
-        .row-matched .v-cell { background-color: var(--anim-match) !important; transition: background 0.5s; }
+        /* --- VIZ STATE CLASSES --- */
+        
+        /* 1. VISITED: Indicates row was processed at least once */
+        .row-visited .v-cell { 
+            background-color: var(--anim-visited) !important; 
+            color: var(--text-muted);
+        }
+
+        /* 2. SCANNING: Active read (Overrides Visited) */
+        .row-scanning .v-cell { 
+            background-color: var(--anim-scan) !important; 
+            color: var(--text-main);
+            font-weight: bold; 
+        }
+
+        /* 3. CELL READ: Specific cell focus */
+        .cell-reading { 
+            background-color: var(--anim-cell) !important; 
+            color: white !important; 
+            font-weight: bold; 
+            transform: scale(1.1); 
+            box-shadow: 0 0 5px rgba(0,0,0,0.2); 
+            z-index: 10; 
+        }
+
+        /* 4. MATCH: Successful join */
+        .row-matched .v-cell { 
+            background-color: var(--anim-match) !important; 
+            color: #000;
+            transition: background 0.5s; 
+        }
 
         /* BOTTOM: RESULTS */
         #result-pane { flex: 1; min-height: 180px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-panel); display: flex; flex-direction: column; overflow: hidden; }
@@ -175,66 +207,18 @@
 
         /* --- RESPONSIVE MOBILE CSS --- */
         @media (max-width: 900px) {
-            /* Enable full page scroll */
-            body { 
-                height: auto; 
-                overflow-y: auto; 
-            }
-            
-            /* Header Wrap */
+            body { height: auto; overflow-y: auto; }
             header { height: auto; flex-wrap: wrap; padding: 10px 15px; gap: 10px; }
             .controls { width: 100%; justify-content: space-between; }
-
-            /* Main Layout Stack */
-            main { 
-                flex-direction: column; 
-                overflow: visible; 
-                height: auto; 
-            }
-
-            /* Schema Panel */
-            #schema-panel { 
-                width: 100%; 
-                height: auto; 
-                max-height: 400px; /* Internal scroll if too long */
-                border-right: none; 
-                border-bottom: 1px solid var(--border); 
-            }
-
-            /* Workbench Container */
-            #workbench { 
-                padding: 10px; 
-                gap: 20px; 
-                overflow: visible; 
-                height: auto;
-            }
-
-            /* Editor & Pipeline Stack */
-            #top-pane { 
-                flex-direction: column; 
-                height: auto; 
-            }
-            #pipeline-col { 
-                width: 100%; 
-                flex-direction: row; 
-                flex-wrap: wrap; 
-                height: auto;
-                max-height: 120px;
-            }
-            .pipe-step { flex: 1 1 40%; } /* 2 per row */
+            main { flex-direction: column; overflow: visible; height: auto; }
+            #schema-panel { width: 100%; height: auto; max-height: 400px; border-right: none; border-bottom: 1px solid var(--border); }
+            #workbench { padding: 10px; gap: 20px; overflow: visible; height: auto; }
+            #top-pane { flex-direction: column; height: auto; }
+            #pipeline-col { width: 100%; flex-direction: row; flex-wrap: wrap; height: auto; max-height: 120px; }
+            .pipe-step { flex: 1 1 40%; } 
             #editor-col { height: 300px; }
-
-            /* Viz Stage Fix Height for scrolling */
-            #viz-stage { 
-                height: 400px; 
-                flex: none; 
-            }
-
-            /* Result Pane */
-            #result-pane { 
-                height: 300px; 
-                flex: none; 
-            }
+            #viz-stage { height: 400px; flex: none; }
+            #result-pane { height: 300px; flex: none; }
         }
 
     </style>
@@ -364,7 +348,7 @@ WHERE o.quantity > 0</textarea>
         showTab('msg');
     }
 
-    // --- ROBUST SCHEMA EDITOR (RESTORED) ---
+    // --- SCHEMA EDITOR ---
     function renderSchema() {
         const container = document.getElementById('tables-container');
         container.innerHTML = '';
@@ -376,7 +360,7 @@ WHERE o.quantity > 0</textarea>
             const card = document.createElement('div');
             card.className = 'table-card';
             
-            // Grid Styling for N columns + 1 delete column
+            // Grid Styling
             const gridStyle = `grid-template-columns: repeat(${cols.length}, 1fr) 25px;`;
             
             let html = `
@@ -417,7 +401,7 @@ WHERE o.quantity > 0</textarea>
         });
     }
 
-    // --- SCHEMA OPERATIONS (RESTORED) ---
+    // --- SCHEMA OPERATIONS ---
     function addTable() {
         const name = document.getElementById('new-table-name').value.trim();
         if(name && !appData[name]) { appData[name] = [{id: 1}]; document.getElementById('new-table-name').value = ''; renderSchema(); }
@@ -477,7 +461,7 @@ WHERE o.quantity > 0</textarea>
                 let joinTbl = words[currentIdx+1];
                 let alias = words[currentIdx+2] === 'ON' ? joinTbl : words[currentIdx+2]; 
                 
-                // Extract keys: a.id = b.id
+                // Extract keys
                 let condition = words.slice(onIdx+1, onIdx+4).join(''); 
                 let parts = condition.split('=');
                 let leftKey = parts[0].trim();
@@ -580,7 +564,6 @@ WHERE o.quantity > 0</textarea>
                             nextResult.push(merged);
                             matchCount++;
                             
-                            // Add to Intermediate UI
                             addVizRow(interId, merged);
                             await wait(delay);
                         }
@@ -637,8 +620,6 @@ WHERE o.quantity > 0</textarea>
         const tableDiv = createVizTableContainer(parent, title, id);
         if(!data.length) return;
         const cols = Object.keys(data[0]);
-        
-        // Dynamic Grid Columns
         const gridStyle = `grid-template-columns: repeat(${cols.length}, 1fr);`;
         
         let html = `<div class="v-row v-header-row" style="${gridStyle}">${cols.map(c=>`<div class="v-cell">${c}</div>`).join('')}</div>`;
@@ -672,14 +653,23 @@ WHERE o.quantity > 0</textarea>
         });
     }
 
+    // --- VISUALIZATION STATE LOGIC ---
+    // 1. hlRow (Highlight): Adds 'scanning'
     function hlRow(tblId, rIdx, cls) {
         const r = document.getElementById(`${tblId}-r${rIdx}`);
         if(r) r.classList.add(cls);
     }
     
+    // 2. unhlRow (Unhighlight): Removes 'scanning', ADDS 'visited'
     function unhlRow(tblId, rIdx, cls) {
         const r = document.getElementById(`${tblId}-r${rIdx}`);
-        if(r) r.classList.remove(cls);
+        if(r) {
+            r.classList.remove(cls);
+            // If we just finished scanning, mark as visited
+            if(cls === 'row-scanning') {
+                r.classList.add('row-visited');
+            }
+        }
     }
 
     function setStep(idx, status) {
