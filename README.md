@@ -83,4 +83,3 @@ Simply double-click `index.html` to open it in your browser.
 
 **Created with ❤️ using HTML, CSS, JavaScript, and Google Gemini.**
 
-```
