@@ -40,7 +40,7 @@ This project is a **single-file application**. No Node.js, Python, or backend se
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yashkantharia/sql-visualiser.git](https://github.com/yashkantharia/sql-visualiser.git)
+   git clone https://github.com/yashkantharia/sql-visualiser.git
 
 
 2. **Run the App:**
