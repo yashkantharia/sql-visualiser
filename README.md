@@ -1,8 +1,8 @@
-# ⚡ SQL.js Studio - Live Execution Visualizer
+# ⚡ SQL Visualizer - Live Execution Visualizer
 
-A powerful, fully client-side SQL workbench designed to visualize the internal execution flow of SQL queries. Powered by **SQL.js** (SQLite compiled to WebAssembly), this tool breaks down queries into logical steps and animates the data retrieval process row-by-row in real-time.
+A powerful, fully client-side SQL workbench for visualizing the internal execution flow of SQL queries. Powered by **SQL.js** (SQLite compiled to WebAssembly), this tool breaks down queries into logical steps and animates the data retrieval process row-by-row in real-time.
 
-*(Replace this link with an actual screenshot of your application)*
+*https://yashkantharia.github.io/sql-visualiser*
 
 ## 🚀 Key Features
 
@@ -16,7 +16,7 @@ A powerful, fully client-side SQL workbench designed to visualize the internal e
 * **Nested Loop Simulation:** Visually simulates how a database engine scans tables.
 * <span style="background:#fef08a; padding:2px 5px; border-radius:3px; color:#000">**Yellow**</span>: **Scanning** rows in the source table.
 * <span style="background:#f9a8d4; padding:2px 5px; border-radius:3px; color:#000">**Pink**</span>: **Reading** specific cells for comparison.
-* <span style="background:#86efac; padding:2px 5px; border-radius:3px; color:#000">**Green**</span>: **Match Found!** The row is merged and sent to the result set.
+* <span style="background:#86efac; padding:2px 5px; border-radius:3px; color:#000">**Green**</span>: **Match Found!** The row is merged into the result set.
 
 
 * **Intermediate Results:** Watch as temporary tables are built dynamically during `JOIN` operations.
@@ -42,7 +42,7 @@ This project is a **single-file application**. No Node.js, Python, or backend se
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/sql-js-studio.git
+git clone https://github.com/yashkantharia/sql-visualiser.git
 
 ```
 
