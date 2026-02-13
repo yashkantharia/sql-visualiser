@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Visualiser - Dark Mode Fix</title>
+    <title>SQL Visualiser - Robust CSV</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 
@@ -25,10 +25,10 @@
             --danger: #ef4444;
             
             /* Visualization Colors */
-            --anim-scan: #fef08a; /* Yellow: Active Scan */
-            --anim-cell: #f472b6; /* Pink: Active Cell Read */
-            --anim-match: #86efac; /* Green: Match Found */
-            --text-highlight: #000000; /* Text color on highlight (Black for Light Mode) */
+            --anim-scan: #fef08a; 
+            --anim-cell: #f472b6; 
+            --anim-match: #86efac; 
+            --text-highlight: #000000;
             
             /* Scrollbars */
             --scroll-track: #f1f5f9;
@@ -55,10 +55,10 @@
             --primary-bg: #1e3a8a;
             
             /* Viz Colors Dark */
-            --anim-scan: #422006; /* Dark Yellow */
-            --anim-cell: #831843; /* Dark Pink */
-            --anim-match: #064e3b; /* Dark Green */
-            --text-highlight: #ffffff; /* Text color on highlight (White for Dark Mode) */
+            --anim-scan: #422006;
+            --anim-cell: #831843;
+            --anim-match: #064e3b;
+            --text-highlight: #ffffff;
             
             /* Scrollbars Dark */
             --scroll-track: #0f172a;
@@ -75,14 +75,12 @@
 
         * { box-sizing: border-box; }
         
-        /* Global Scrollbar Styling */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--scroll-track); }
         ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
         * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
 
-        /* Main Layout */
         body { 
             font-family: 'Inter', system-ui, sans-serif; 
             margin: 0; 
@@ -159,7 +157,7 @@
         .pipe-step.active { border-left: 3px solid var(--primary); background: var(--bg-panel); color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .pipe-step.done { border-left: 3px solid var(--success); opacity: 0.6; }
 
-        /* SQL EDITOR (IDE STYLE) */
+        /* SQL EDITOR */
         #editor-col { flex: 1; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg-panel); }
         .tabs { display: flex; background: var(--bg-header); border-bottom: 1px solid var(--border); }
         .tab { padding: 8px 15px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); border-right: 1px solid var(--border); }
@@ -167,7 +165,6 @@
         
         .editor-wrapper { position: relative; flex: 1; overflow: hidden; background: var(--code-bg); cursor: text; }
         
-        /* The invisible textarea for input */
         #code-input {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             margin: 0; padding: 15px; border: none; outline: none; resize: none;
@@ -176,7 +173,6 @@
             z-index: 2; overflow: auto; white-space: pre;
         }
         
-        /* The visible syntax highlighted layer */
         #code-highlight {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             margin: 0; padding: 15px; border: none;
@@ -186,13 +182,12 @@
         }
 
         /* Syntax Colors */
-        .kwd { color: var(--code-kw); font-weight: bold; } /* Keywords */
-        .str { color: var(--code-str); } /* Strings */
-        .com { color: var(--code-com); font-style: italic; } /* Comments */
-        .fn { color: var(--code-fn); } /* Functions */
+        .kwd { color: var(--code-kw); font-weight: bold; }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .fn { color: var(--code-fn); }
 
         .editor-footer { padding: 8px; background: var(--bg-header); text-align: right; border-top: 1px solid var(--border); z-index: 3; position: relative; }
-        
         #pane-msg { flex: 1; padding: 15px; display: none; color: var(--danger); font-family: monospace; overflow: auto; }
 
         /* MIDDLE: VIZ STAGE */
@@ -217,7 +212,6 @@
         }
         .v-row { display: grid; padding: 0; border-bottom: 1px solid var(--border); font-family: monospace; font-size: 0.8rem; transition: background 0.1s; gap:1px; }
         
-        /* Viz Cells (Theme Aware) */
         .v-cell { 
             padding: 6px 8px; border-right: 1px solid var(--border); overflow: hidden; 
             text-overflow: ellipsis; white-space: nowrap; transition: background 0.2s; 
@@ -229,7 +223,7 @@
 
         .arrow-icon { align-self: center; font-size: 1.5rem; color: var(--text-muted); padding-top: 20px; }
 
-        /* States with Dynamic Text Color */
+        /* Animation States with High Contrast Text */
         .row-scanning .v-cell { 
             background-color: var(--anim-scan) !important; 
             color: var(--text-highlight) !important; 
@@ -295,7 +289,7 @@
                 <button class="btn btn-primary" onclick="addTable()">+ Table</button>
             </div>
             <div class="input-group">
-                <label for="csv-upload" class="btn" style="flex:1; text-align:center; font-size:0.8rem;">📂 Upload CSV</label>
+                <label for="csv-upload" class="btn" style="flex:1; text-align:center; font-size:0.8rem; cursor:pointer;">📂 Upload CSV</label>
                 <input type="file" id="csv-upload" accept=".csv" style="display:none" onchange="handleCSV(this)">
             </div>
         </div>
@@ -382,7 +376,7 @@ WHERE o.quantity > 0</textarea>
     async function init() {
         // Theme Detection
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            toggleTheme(); // Set initial dark
+            toggleTheme(); 
         }
 
         const config = { locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` };
@@ -394,7 +388,7 @@ WHERE o.quantity > 0</textarea>
         renderSchema();
     }
 
-    // --- CSV IMPORT ---
+    // --- CSV PARSING (Robust) ---
     function handleCSV(input) {
         const file = input.files[0];
         if(!file) return;
@@ -402,25 +396,29 @@ WHERE o.quantity > 0</textarea>
         const reader = new FileReader();
         reader.onload = function(e) {
             const text = e.target.result;
+            // Robust Regex for CSV splitting (handles quoted strings including commas)
+            const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; 
+            
             const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
             if(lines.length < 2) return alert("CSV must have header and at least one row");
             
-            const headers = lines[0].split(',').map(h => h.trim());
+            // Clean quotes from header
+            const headers = lines[0].split(regex).map(h => h.trim().replace(/^"|"$/g, ''));
             const tableName = file.name.replace('.csv', '').replace(/[^a-zA-Z0-9]/g, '_');
             
             const rows = [];
             for(let i=1; i<lines.length; i++) {
-                const vals = lines[i].split(',');
+                const vals = lines[i].split(regex).map(v => v.trim().replace(/^"|"$/g, ''));
                 if(vals.length === headers.length) {
                     let row = {};
-                    headers.forEach((h, idx) => row[h] = vals[idx].trim());
+                    headers.forEach((h, idx) => row[h] = vals[idx]);
                     rows.push(row);
                 }
             }
             
             appData[tableName] = rows;
             renderSchema();
-            input.value = ''; // Reset
+            input.value = ''; 
         };
         reader.readAsText(file);
     }
@@ -428,18 +426,12 @@ WHERE o.quantity > 0</textarea>
     // --- EDITOR LOGIC ---
     function updateEditor(el) {
         const text = el.value;
-        // Simple Syntax Highlighting Regex
         let html = text
             .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-            // Comments
             .replace(/(--.*)/g, '<span class="com">$1</span>')
-            // Strings
             .replace(/('.*?')/g, '<span class="str">$1</span>')
-            // Keywords (Case Insensitive)
             .replace(/\b(SELECT|FROM|WHERE|JOIN|ON|GROUP BY|ORDER BY|LIMIT|AS|WITH|INSERT|UPDATE|DELETE|CREATE|AND|OR|NOT|NULL)\b/gi, '<span class="kwd">$1</span>')
-            // Functions
             .replace(/\b(COUNT|SUM|AVG|MAX|MIN)\b/gi, '<span class="fn">$1</span>');
-            
         document.getElementById('code-highlight').innerHTML = html;
     }
 
@@ -472,6 +464,10 @@ WHERE o.quantity > 0</textarea>
         Object.keys(appData).forEach(tableName => {
             const rows = appData[tableName];
             const cols = rows.length ? Object.keys(rows[0]) : ['id'];
+            
+            // Limit preview rows for performance
+            const previewRows = rows.slice(0, 50);
+            
             const card = document.createElement('div');
             card.className = 'table-card';
             const gridStyle = `grid-template-columns: repeat(${cols.length}, 1fr) 25px;`;
@@ -492,7 +488,8 @@ WHERE o.quantity > 0</textarea>
                             `).join('')}
                             <div class="db-cell"></div>
                         </div>`;
-            rows.forEach((row, rIdx) => {
+            
+            previewRows.forEach((row, rIdx) => {
                 html += `<div class="db-row" style="${gridStyle}">`;
                 cols.forEach(c => {
                     const val = row[c] !== null ? row[c] : 'NULL';
@@ -520,7 +517,7 @@ WHERE o.quantity > 0</textarea>
     function updateCell(t,i,k,v) { if(!isNaN(v)&&v.trim()!=='') v=Number(v); appData[t][i][k]=v; }
     function renameCol(t,o,n) { if(!n||o===n)return; appData[t].forEach(r=>{r[n]=r[o]; delete r[o];}); renderSchema(); }
 
-    // --- PIPELINE PARSER ---
+    // --- PIPELINE & EXECUTION (Same Logic) ---
     function parsePipeline(sql) {
         const steps = [];
         const words = sql.replace(/[\n\t]/g, ' ').split(/\s+/);
@@ -537,8 +534,6 @@ WHERE o.quantity > 0</textarea>
                 let onIdx = words.indexOf('ON', currentIdx);
                 let joinTbl = words[currentIdx+1];
                 let alias = (words[currentIdx+2] && words[currentIdx+2].toUpperCase()!=='ON') ? words[currentIdx+2] : joinTbl;
-                
-                // Extract keys simple
                 let leftKey='', rightKey='';
                 if(onIdx > -1) {
                     let condition = words.slice(onIdx+1, onIdx+4).join(''); 
@@ -562,10 +557,9 @@ WHERE o.quantity > 0</textarea>
         });
     }
 
-    // --- EXECUTION ---
     async function startExecution() {
         if(!SQL) return;
-        const sql = document.getElementById('code-input').value; // Get value from textarea
+        const sql = document.getElementById('code-input').value;
         const status = document.getElementById('status-text');
         
         document.getElementById('anim-canvas').innerHTML = '';
@@ -642,7 +636,6 @@ WHERE o.quantity > 0</textarea>
                     unhlRow('viz-base', r1, 'row-scanning');
                 }
                 currentResult = nextResult; 
-                
                 if(i < plan.length - 1 && plan[i+1].type === 'JOIN') {
                     rowCon = document.createElement('div');
                     rowCon.className = 'viz-row-container';
@@ -652,7 +645,6 @@ WHERE o.quantity > 0</textarea>
                 setStep(i, 'done');
             }
 
-            // Final Exec
             const lastStepIdx = plan.length-1;
             setStep(lastStepIdx, 'active');
             status.innerText = "Finalizing...";
